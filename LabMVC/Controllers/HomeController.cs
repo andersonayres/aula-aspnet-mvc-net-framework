@@ -39,5 +39,27 @@ namespace LabMVC.Controllers
 
             return View();
         }
+        public ActionResult Listar()
+        {
+            List<Cliente> clientes = Cliente.Todos(); // Obtém os clientes do banco de dados usando o método Todos() da classe Cliente
+
+            return View(clientes);
+        }
+        public ActionResult Editar(int id)
+        {
+            // Lógica para obter os dados do cliente com o ID fornecido
+            Cliente cliente = Cliente.BuscarPorId(id);
+
+            // Renderizar a view de edição com os dados do cliente
+            return View(cliente);
+        }
+        
+        
+        public ActionResult BemVindo()
+        {
+            return View("BemVindo");
+        }
+        
+
     }
 }

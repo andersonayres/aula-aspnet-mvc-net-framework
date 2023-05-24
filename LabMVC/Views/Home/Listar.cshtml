@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@using LabWebForms.Models;
+
+<div class="jumbotron">
+   
+    <p><a href="../Clientes/HtmlPuro" class="btn btn-primary btn-lg">Adicionar Contato &raquo;</a></p>
+
+
+    <h1 class="display-4">Listagem de Contatos</h1>
+    <hr />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Login</th>
+                <th scope="col">Email</th>
+                <th scope="col">Senha</th>
+                <th scope="col">Cidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cliente in Model)
+            {
+                <tr>
+                    <th scope="row">@cliente.Id</th>
+                    <td>@cliente.Nome</td>
+                    <td>@cliente.Login</td>
+                    <td>@cliente.Email</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(cliente.Senha) && cliente.Senha.Length >= 5)
+                        {
+                            @cliente.Senha.Substring(0, 5); @:...
+                        }
+                        else
+                        {
+                            @cliente.Senha
+                        }
+                    </td>
+                    <td>
+                        @if (cliente.Cidade != null)
+                        {
+                            @cliente.Cidade.Id
+                        }
+                    </td>
+                    
+                    <td>
+                        <div class="btn-group btn-group-horizontal btn-group-spacing" role="group">
+                            <a  class="btn btn-primary" href="@Url.Action("Editar", "Home", new { id = cliente.Id })">Editar</a>
+
+
+                            <a role="button" class="btn btn-danger">Apagar</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

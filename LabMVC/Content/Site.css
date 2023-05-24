@@ -22,3 +22,6 @@ select,
 textarea {
     max-width: 280px;
 }
+.btn-group-spacing {
+    margin-top: 10px; /* Ajuste o valor conforme necessário */
+}

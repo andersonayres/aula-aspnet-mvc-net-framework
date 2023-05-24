@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -15,35 +16,13 @@ namespace LabWebForms.Models
 
         public static List<Cidade> Todos(Estado estado)
         {
-            List<Cidade> cidades = new List<Cidade>();
-
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            if (estado != null)
             {
-                connection.Open();
-
-                string sql = "SELECT id, nome, id_estado FROM Cidades where id_estado = " + estado.Id;
-
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Cidade cidade = new Cidade();
-                            cidade.Id = reader.GetInt32(0);
-                            cidade.Nome = reader.GetString(1);
-
-                            Estado estadoDB = new Estado();
-                            estadoDB.Id = reader.GetInt32(2);
-                            cidade.Estado = estadoDB;
-
-                            cidades.Add(cidade);
-                        }
-                    }
-                }
+                return estado.Cidades();
             }
 
-            return cidades;
+            return new List<Cidade>();
         }
     }
+
 }

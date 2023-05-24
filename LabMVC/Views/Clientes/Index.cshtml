@@ -1,12 +1,12 @@
 ﻿@model LabWebForms.Models.Cliente
 
 @{
-    ViewBag.Title = "Novo Cliente";
+    ViewBag.Title = "Novo Cliente 1";
 }
 
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm("Salvar", "Cliente", FormMethod.Post))
+@using (Html.BeginForm("Salvar", "Clientes", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -17,10 +17,25 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Telefone)
-        @Html.TextBoxFor(model => model.Telefone, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Telefone, "", new { @class = "text-danger" })
+        @Html.LabelFor(model => model.Email)
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Login)
+        @Html.TextBoxFor(model => model.Login, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Senha)
+        @Html.TextBoxFor(model => model.Senha, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Senha, "", new { @class = "text-danger" })
+    </div>
+
+ 
+
 
     <div class="form-group">
         @Html.LabelFor(model => model.Cidade)
@@ -31,4 +46,31 @@
     <div class="form-group">
         <input type="submit" value="Cadastrar" class="btn btn-primary" />
     </div>
+    @section scripts {
+        <script>
+        $(document).ready(function () {
+            $('#estadoId').change(function () {
+                var estadoId = $(this).val();
+
+                $.ajax({
+                    url: '@Url.Action("ObterCidades", "Clientes")',
+                    type: 'GET',
+                    data: { estadoId: estadoId },
+                    success: function (data) {
+                        var cidadesDropdown = $('#cidadeId');
+                        cidadesDropdown.empty();
+
+                        $.each(data, function (index, cidade) {
+                            cidadesDropdown.append($('<option/>', {
+                                value: cidade.Id,
+                                text: cidade.Nome
+                            }));
+                        });
+                    }
+                });
+            });
+        });
+        </script>
+    }
+
 }

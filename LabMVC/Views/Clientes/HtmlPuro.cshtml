@@ -2,12 +2,43 @@
 @using LabWebForms.Models
 
 @{
-    ViewBag.Title = "Novo Cliente";
+    ViewBag.Title = "Novo Cliente 2";
 }
 
 <h2>@ViewBag.Title</h2>
 
-<form method="post" action="@Url.Action("Salvar", "Cliente")">
+@{
+    int estadoId = Model.Estado != null ? Model.Estado.Id : 0;
+    List<Cidade> cidades = Cidade.Todos(Model.Estado);
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Manipulador de evento para quando o dropdown de estado for alterado
+        $('#Estado_Id').change(function () {
+            var estadoId = $(this).val(); // Obtém o valor do estado selecionado
+
+            // Faz uma requisição AJAX para obter as cidades correspondentes ao estado selecionado
+            $.ajax({
+                url: '@Url.Action("ObterCidades", "Clientes")', // Especifique a URL correta para o método "ObterCidades" no controller "Clientes"
+                type: 'GET',
+                data: { estadoId: estadoId }, // Passa o ID do estado como parâmetro
+                success: function (cidades) {
+                    // Limpa o dropdown de cidades
+                    $('#Cidade_Id').empty();
+
+                    // Adiciona as opções de cidade ao dropdown
+                    $.each(cidades, function (index, cidade) {
+                        $('#Cidade_Id').append($('<option>').text(cidade.Nome).attr('value', cidade.Id));
+                    });
+                }
+            });
+        });
+    });
+</script>
+<form method="post" action="@Url.Action("Salvar", "Clientes")">
     @Html.AntiForgeryToken()
 
     <div class="form-group">
@@ -16,22 +47,54 @@
     </div>
 
     <div class="form-group">
-        <label for="Telefone">Telefone:</label>
-        <input type="text" name="Telefone" id="Telefone" class="form-control" value="@Model.Telefone" />
+        <label for="Email">Email:</label>
+        <input type="text" name="Email" id="Email" class="form-control" value="@Model.Email" />
+    </div>
+
+    <div class="form-group">
+        <label for="Login">Login:</label>
+        <input type="text" name="Login" id="Login" class="form-control" value="@Model.Login" />
+    </div>
+
+    <div class="form-group">
+        <label for="Senha">Senha:</label>
+        <input type="text" name="Senha" id="Senha" class="form-control" value="@Model.Senha" />
+    </div>
+
+    <div class="form-group">
+        <label for="Estado.Id">Estado:</label>
+        <select name="Estado.Id" id="Estado.Id" class="form-control">
+            <option value="">-- Selecione o estado --</option>
+            @foreach (Estado estado in Estado.Todos())
+            {
+                <option value="@estado.Id" @(Model.Estado != null && estado.Id == Model.Estado.Id ? "selected" : "")>@estado.Nome</option>
+            }
+        </select>
     </div>
 
     <div class="form-group">
         <label for="Cidade.Id">Cidade:</label>
         <select name="Cidade.Id" id="Cidade.Id" class="form-control">
             <option value="">-- Selecione a cidade --</option>
-            @foreach (Cidade cidade in ViewBag.Cidades)
+            @if (Model.Estado != null)
             {
-                <option value="@cidade.Id" @(Model.Cidade != null && cidade.Id == Model.Cidade.Id ? "selected" : "")>@cidade.Nome</option>
+                foreach (Cidade cidade in Model.Estado.Cidades())
+                {
+                    <option value="@cidade.Id" @(Model.Cidade != null && cidade.Id == Model.Cidade.Id ? "selected" : "")>@cidade.Nome</option>
+                }
             }
         </select>
     </div>
 
+
     <div class="form-group">
         <input type="submit" value="Cadastrar" class="btn btn-primary" />
     </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.MensagemSucesso))
+    {
+        <div class="alert alert-success">
+            @ViewBag.MensagemSucesso
+        </div>
+    }
 </form>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.UI.WebControls;
 
 namespace LabMVC
 {
@@ -13,16 +14,36 @@ namespace LabMVC
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+
             routes.MapRoute(
-               name: "clientes_novo",
-               url: "clientes/novo",
-               defaults: new { controller = "Clientes", action = "Index" }
+            name: "Login",
+            url: "Login/Index",
+            defaults: new { controller = "Login", action = "Index" }
+        );
+
+
+            routes.MapRoute(
+            name: "cliente_salvar",
+            url: "Clientes/Salvar",
+            defaults: new { controller = "Clientes", action = "Salvar" }
             );
 
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            name: "Editar",
+            url: "Home/Editar/{id}",
+            defaults: new { controller = "Home", action = "Editar" }
+            );
+
+            routes.MapRoute(
+            name: "BemVindo",
+            url: "Home/BemVindo",
+            defaults: new { controller = "Home", action = "BemVindo" }
+            );
+
+            routes.MapRoute(
+            name: "Default",
+             url: "{controller}/{action}/{id}",
+            defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

@@ -1,0 +1,54 @@
+﻿@model LabWebForms.Models.Cliente
+@using LabWebForms.Models
+
+@{
+    ViewBag.Title = "Editar";
+}
+
+<h2>Editar</h2>
+
+<form method="post" action="@Url.Action("Salvar", "Clientes")">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label for="Nome">Nome:</label>
+        <input type="text" name="Nome" id="Nome" class="form-control" value="@Model.Nome" />
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Email:</label>
+        <input type="text" name="Email" id="Email" class="form-control" value="@Model.Email" />
+    </div>
+
+    <div class="form-group">
+        <label for="Login">Login:</label>
+        <input type="text" name="Login" id="Login" class="form-control" value="@Model.Login" />
+    </div>
+
+    <div class="form-group">
+        <label for="Senha">Senha:</label>
+        <input type="text" name="Senha" id="Senha" class="form-control" value="@Model.Senha" />
+    </div>
+
+
+    <div class="form-group">
+        <label for="Cidade.Id">Cidade:</label>
+        <select name="Cidade.Id" id="Cidade.Id" class="form-control">
+            <option value="">-- Selecione a cidade --</option>
+            @foreach (Cidade cidade in ViewBag.Cidades ?? new List<Cidade>())
+            {
+                <option value="@cidade.Id" @(Model.Cidade != null && cidade.Id == Model.Cidade.Id ? "selected" : "")>@cidade.Nome</option>
+            }
+
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Atualizar" class="btn btn-primary" />
+    </div>
+    @if (!string.IsNullOrEmpty(ViewBag.MensagemSucesso))
+    {
+        <div class="alert alert-success">
+            @ViewBag.MensagemSucesso
+        </div>
+    }
+</form>
